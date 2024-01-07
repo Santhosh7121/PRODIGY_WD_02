@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Stopwatch</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url('Space bg.png');
+      background-size: cover;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+    }
+
+    #stopwatch-container {
+      text-align: center;
+    }
+
+    #dial {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      background-color: #333;
+      border-radius: 50%;
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Impact', sans-serif;
+      font-size: 24px;
+      color: #ffcc00;
+    }
+
+    #controls {
+      margin-top: 20px;
+    }
+
+    button {
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      color: #fff;
+      background-color: #444;
+      padding: 10px 20px;
+      margin: 0 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="stopwatch-container">
+  <div id="dial">00:00:00.000</div>
+  <div id="controls">
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="stopStopwatch()">Stop</button>
+    <button onclick="resetStopwatch()">Reset</button>
+  </div>
+</div>
+
+<script>
+  let interval;
+  let startTime;
+  let running = false;
+
+  function startStopwatch() {
+    if (!running) {
+      startTime = new Date().getTime();
+      interval = setInterval(updateStopwatch, 10);
+      running = true;
+    }
+  }
+
+  function stopStopwatch() {
+    if (running) {
+      clearInterval(interval);
+      running = false;
+    }
+  }
+
+  function resetStopwatch() {
+    stopStopwatch();
+    document.getElementById('dial').innerText = '00:00:00.000';
+  }
+
+  function updateStopwatch() {
+    const currentTime = new Date().getTime();
+    const elapsedTime = currentTime - startTime;
+
+    const hours = Math.floor(elapsedTime / 3600000);
+    const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+    const seconds = Math.floor((elapsedTime % 60000) / 1000);
+    const milliseconds = elapsedTime % 1000;
+
+    const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}.${padZeroMilliseconds(milliseconds)}`;
+    
+    document.getElementById('dial').innerText = formattedTime;
+  }
+
+  function padZero(value) {
+    return value < 10 ? `0${value}` : value;
+  }
+
+  function padZeroMilliseconds(value) {
+    if (value < 10) return `00${value}`;
+    if (value < 100) return `0${value}`;
+    return value;
+  }
+</script>
+
+</body>
+</html>
